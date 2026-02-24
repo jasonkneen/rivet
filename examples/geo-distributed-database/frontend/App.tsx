@@ -123,14 +123,15 @@ export function App() {
 
 	useEffect(() => {
 		if (!actor.connection) return;
+		const conn = actor.connection;
 
 		let cancelled = false;
 
 		const loadSession = async () => {
 			const start = performance.now();
 			const [snapshot, region] = await Promise.all([
-				actor.connection.getSession(),
-				actor.connection.getRegion(),
+				conn.getSession(),
+				conn.getRegion(),
 			]);
 			if (cancelled) return;
 			setSession(snapshot);
