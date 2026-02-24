@@ -20,7 +20,7 @@ export default function App() {
 
 	useEffect(() => {
 		(async () => {
-			const ws = await chatRoom.handle?.websocket();
+			const ws = await chatRoom.handle?.webSocket();
 
 			if (!ws) return;
 
@@ -29,7 +29,7 @@ export default function App() {
 				console.log("Connected via direct access!");
 			};
 
-			ws.onmessage = (event) => {
+			ws.onmessage = (event: MessageEvent) => {
 				const data = JSON.parse(event.data);
 
 				if (data.type === "init") {
@@ -43,12 +43,12 @@ export default function App() {
 				}
 			};
 
-			ws.onclose = (event) => {
+			ws.onclose = (event: CloseEvent) => {
 				setIsConnected(false);
 				console.log("WebSocket closed:", event.code, event.reason);
 			};
 
-			ws.onerror = (event) => {
+			ws.onerror = (event: Event) => {
 				console.error("WebSocket error:", event);
 			};
 
