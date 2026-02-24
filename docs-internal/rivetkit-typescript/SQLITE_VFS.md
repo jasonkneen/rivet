@@ -25,6 +25,11 @@
 - Measure `xAccess` KV round-trip overhead during DB open
 - Benchmark `journal_mode=PERSIST` + `journal_size_limit` (fewer KV deletes per txn)
 - Fast-path delete-on-close: reuse in-memory `file.size` instead of extra `metaKey` read
+- Add per-method metrics for `xOpen`/`xAccess`/`xRead`/`xWrite`/`xTruncate`/`xDelete` and KV call counts/latency
+- Measure journal-file traffic volume (create/write/delete) before any IOCAP or PRAGMA changes
+- Implement `xSectorSize = CHUNK_SIZE` (4096) and benchmark impact
+- Reduce `xTruncate` round trips by batching last-chunk rewrite + metadata update in one `putBatch` where possible
+- Validate and document page-size alignment expectations (`page_size = CHUNK_SIZE`)
 
 ## Decisions Made
 - Do NOT defer metadata writes to `xSync`/`xClose` — crash risk outweighs minimal gain (metadata already batched with chunk data in `putBatch`)
@@ -34,3 +39,7 @@
 ## Future Work
 - **PITR / fork**: implement at KV layer (immutable chunk versions, manifests, branch heads, GC) with SQLite layer providing snapshot boundary coordination
 - **Remove double mutex** once profiled
+- **IOCAP exploration (guarded)**:
+  - Do not set `SQLITE_IOCAP_BATCH_ATOMIC` unless actor KV `putBatch` atomicity is proven and `xFileControl` atomic-write opcodes are handled correctly.
+  - `SQLITE_IOCAP_ATOMIC4K` is only safe if single-key KV writes are crash-atomic at 4 KiB granularity.
+  - Prioritize metrics and correctness proof before enabling either flag.
