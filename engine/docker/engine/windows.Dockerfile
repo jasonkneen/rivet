@@ -1,5 +1,5 @@
 # syntax=docker/dockerfile:1.10.0
-FROM rust:1.89.0
+FROM rust:1.89.0-bookworm
 
 ARG BUILD_FRONTEND=true
 ARG VITE_APP_API_URL=__SAME__
