@@ -183,14 +183,12 @@ async function runBuildAndChecks(opts: ReleaseOpts, { ci }: BuildAndCheckOpts) {
 	const ciLabel = ci ? "CI" : "Local";
 	console.log(`Running ${ciLabel} build and checks...`);
 
-	// Build exclusion filters for CI (excludes website and packages that shouldn't be built in CI)
-	const excludeFilters = ci
-		? [
-				"-F",
-				"!rivet-website",
-				...EXCLUDED_RIVETKIT_PACKAGES.flatMap((pkg) => ["-F", `!${pkg}`]),
-			]
-		: [];
+	// Build exclusion filters (excludes website and packages that shouldn't be built)
+	const excludeFilters = [
+		"-F",
+		"!rivet-website",
+		...EXCLUDED_RIVETKIT_PACKAGES.flatMap((pkg) => ["-F", `!${pkg}`]),
+	];
 
 	// Type check
 	console.log("Checking types...");

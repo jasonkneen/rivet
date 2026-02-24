@@ -8,7 +8,7 @@ describe("basic websocket test", () => {
 		const actor = client.chatRoom.getOrCreate("test-room");
 
 		// Connect with simple path
-		const ws = await actor.websocket();
+		const ws = await actor.webSocket();
 
 		// Wait for welcome/init message
 		const initMessage = await new Promise<any>((resolve, reject) => {

@@ -7,7 +7,7 @@ describe("websocket chat", () => {
 		const { client } = await setupTest(test, registry);
 		const actor = client.chatRoom.getOrCreate("test-room");
 
-		const ws = await actor.websocket();
+		const ws = await actor.webSocket();
 
 		// Wait for init message
 		const initMessage = await new Promise<any>((resolve) => {
@@ -31,8 +31,8 @@ describe("websocket chat", () => {
 		const actor = client.chatRoom.getOrCreate("test-room-2");
 
 		// Connect two clients
-		const ws1 = await actor.websocket();
-		const ws2 = await actor.websocket();
+		const ws1 = await actor.webSocket();
+		const ws2 = await actor.webSocket();
 
 		// Skip init messages
 		await new Promise((resolve) => {
@@ -85,7 +85,7 @@ describe("websocket chat", () => {
 		const actor = client.chatRoom.getOrCreate("test-room-3");
 
 		// First client sends a message
-		const ws1 = await actor.websocket();
+		const ws1 = await actor.webSocket();
 		await new Promise((resolve) => {
 			ws1.addEventListener("message", resolve, { once: true });
 		});
@@ -104,7 +104,7 @@ describe("websocket chat", () => {
 		ws1.close();
 
 		// Second client connects and should see the message
-		const ws2 = await actor.websocket();
+		const ws2 = await actor.webSocket();
 		const initMessage = await new Promise<any>((resolve) => {
 			ws2.addEventListener(
 				"message",

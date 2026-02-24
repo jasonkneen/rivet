@@ -18,7 +18,7 @@ app.get(
 
 		// Connect to actor WebSocket
 		const actor = client.chatRoom.getOrCreate(name);
-		const actorWs = await actor.websocket("/");
+		const actorWs = await actor.webSocket("/");
 
 		return {
 			onOpen: async (_evt: Event, ws: WSContext) => {
