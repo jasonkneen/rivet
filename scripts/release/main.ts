@@ -113,11 +113,11 @@ async function validateReuseVersion(version: string): Promise<void> {
 		// version itself reused engine from an earlier release.
 		console.log(`Checking version-tagged Docker manifests for ${version}...`);
 		try {
-			await $({ stdio: "inherit" })`docker manifest inspect rivetkit/engine:slim-${version}`;
+			await $({ stdio: "inherit" })`docker manifest inspect rivetdev/engine:slim-${version}`;
 			console.log("✅ Docker manifest exists");
 		} catch (error) {
 			throw new Error(
-				`Docker manifest rivetkit/engine:slim-${version} does not exist. Error: ${error}`,
+				`Docker manifest rivetdev/engine:slim-${version} does not exist. Error: ${error}`,
 			);
 		}
 
@@ -152,8 +152,8 @@ async function validateReuseVersion(version: string): Promise<void> {
 
 		console.log(`Checking Docker images for ${shortCommit}...`);
 		try {
-			await $({ stdio: "inherit" })`docker manifest inspect rivetkit/engine:slim-${shortCommit}-amd64`;
-			await $({ stdio: "inherit" })`docker manifest inspect rivetkit/engine:slim-${shortCommit}-arm64`;
+			await $({ stdio: "inherit" })`docker manifest inspect rivetdev/engine:slim-${shortCommit}-amd64`;
+			await $({ stdio: "inherit" })`docker manifest inspect rivetdev/engine:slim-${shortCommit}-arm64`;
 			console.log("✅ Docker images exist");
 		} catch (error) {
 			throw new Error(
