@@ -1,4 +1,3 @@
-import { serveStatic } from "@hono/node-server/serve-static";
 import { createRoute } from "@hono/zod-openapi";
 import * as cbor from "cbor-x";
 import type { Hono } from "hono";
@@ -38,7 +37,8 @@ import {
 	type Actor as ApiActor,
 } from "@/manager-api/actors";
 import { buildActorNames, type RegistryConfig } from "@/registry/config";
-import type { GetUpgradeWebSocket } from "@/utils";
+import { loadRuntimeServeStatic } from "@/utils/serve";
+import type { GetUpgradeWebSocket, Runtime } from "@/utils";
 import { timingSafeEqual } from "@/utils/crypto";
 import { isDev } from "@/utils/env-vars";
 import {
@@ -54,6 +54,7 @@ export function buildManagerRouter(
 	config: RegistryConfig,
 	managerDriver: ManagerDriver,
 	getUpgradeWebSocket: GetUpgradeWebSocket | undefined,
+	runtime: Runtime = "node",
 ) {
 	return createRouter(config.managerBasePath, (router) => {
 		// Actor gateway
@@ -589,8 +590,21 @@ export function buildManagerRouter(
 		if (config.inspector.enabled) {
 			let inspectorRoot: string | undefined;
 
-
 			router.get("/ui/*", async (c, next) => {
+				let serveStatic;
+				try {
+					serveStatic = await loadRuntimeServeStatic(runtime);
+				} catch (error) {
+					logger().error({
+						msg: "failed to load inspector static file handler",
+						error: stringifyError(error),
+					});
+					return c.text(
+						`Failed to load static file handler for runtime '${runtime}'.`,
+						500,
+					);
+				}
+
 				if (!inspectorRoot) {
 					inspectorRoot = await getInspectorDir();
 				}
